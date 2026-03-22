@@ -3,22 +3,14 @@ import { NextRequest, NextResponse } from "next/server";
 export async function GET(request: NextRequest) {
   try {
     const cookie = request.headers.get("cookie") || "";
-<<<<<<< HEAD
     const data = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/transactions`, {
-=======
-    const data = await fetch("http://localhost:5000/api/transactions", {
->>>>>>> f8059cb83b79031ce374bda77a5a47ea76f4d828
       headers: { cookie }
     });
     const result = await data.json();
     return NextResponse.json(result, { status: data.status });
   } catch (error) {
     return NextResponse.json(
-<<<<<<< HEAD
       { message: "Failed to fetch transactions" },
-=======
-      { message: "Failed to fetch budgets" },
->>>>>>> f8059cb83b79031ce374bda77a5a47ea76f4d828
       { status: 500 }
     );
   }
@@ -28,11 +20,7 @@ export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
     const cookie = request.headers.get("cookie") || "";
-<<<<<<< HEAD
     const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/transactions`, {
-=======
-    const res = await fetch("http://localhost:5000/api/transactions", {
->>>>>>> f8059cb83b79031ce374bda77a5a47ea76f4d828
       method: "POST",
       headers: { "Content-Type": "application/json", cookie },
       body: JSON.stringify(body)
