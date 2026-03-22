@@ -159,9 +159,9 @@ export function Dashboard() {
         </CardHeader>
         <CardContent>
           <div className="space-y-3">
-            {transactions.slice(0, 5).map((transaction) => (
+            {transactions.slice(0, 5).map((transaction, index) => (
               <div
-                key={transaction._id}
+                key={transaction._id || index}
                 className="flex items-center justify-between rounded-lg border border-border p-3">
                 <div>
                   <p className="font-medium text-foreground">
