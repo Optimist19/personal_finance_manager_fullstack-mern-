@@ -3,7 +3,11 @@ import { NextRequest, NextResponse } from "next/server";
 export async function GET(request: NextRequest) {
   try {
     const cookie = request.headers.get("cookie") || "";
+<<<<<<< HEAD
     const data = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/budgets`, {
+=======
+    const data = await fetch("http://localhost:5000/api/budgets", {
+>>>>>>> f8059cb83b79031ce374bda77a5a47ea76f4d828
       headers: { cookie }
     });
     const result = await data.json();
@@ -20,7 +24,11 @@ export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
     const cookie = request.headers.get("cookie") || "";
+<<<<<<< HEAD
     const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/budgets`, {
+=======
+    const res = await fetch("http://localhost:5000/api/budgets", {
+>>>>>>> f8059cb83b79031ce374bda77a5a47ea76f4d828
       method: "POST",
       headers: { "Content-Type": "application/json", cookie },
       body: JSON.stringify(body)

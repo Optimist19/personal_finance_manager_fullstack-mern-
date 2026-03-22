@@ -13,7 +13,11 @@ export async function PUT(
   try {
     const body = await request.json();
     const cookie = request.headers.get("cookie") || "";
+<<<<<<< HEAD
     const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/transactions/${id}`, {
+=======
+    const res = await fetch(`http://localhost:5000/api/transactions/${id}`, {
+>>>>>>> f8059cb83b79031ce374bda77a5a47ea76f4d828
       method: "PUT",
       headers: { "Content-Type": "application/json", cookie },
       body: JSON.stringify(body)
@@ -51,7 +55,11 @@ export async function DELETE(
   const { id } = await params;
   try {
     const cookie = request.headers.get("cookie") || "";
+<<<<<<< HEAD
     const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/transactions/${id}`, {
+=======
+    const res = await fetch(`http://localhost:5000/api/transactions/${id}`, {
+>>>>>>> f8059cb83b79031ce374bda77a5a47ea76f4d828
       method: "DELETE",
       headers: { cookie }
     });

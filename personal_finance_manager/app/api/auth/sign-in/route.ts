@@ -11,7 +11,11 @@ export async function POST(req: NextRequest) {
   }
 
   try {
+<<<<<<< HEAD
     const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/signin`, {
+=======
+    const res = await fetch("http://localhost:5000/api/signin", {
+>>>>>>> f8059cb83b79031ce374bda77a5a47ea76f4d828
       method: "POST",
       headers: {
         "Content-Type": "application/json"
