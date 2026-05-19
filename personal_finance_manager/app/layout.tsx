@@ -16,7 +16,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "PFM |Home",
+  title: "PFM | Home",
   description: "Put your finances on-check",
   icons: {
     icon: "/pfm-logo.svg"
