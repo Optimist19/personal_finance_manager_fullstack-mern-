@@ -1,4 +1,5 @@
-import RegisterForm from "@/components/RegisterForm"
+import RegisterForm from "@/components/RegisterForm";
+import Image from "next/image";
 
 function RegisterPage() {
   return (
@@ -8,12 +9,21 @@ function RegisterPage() {
           <div className="text-center space-y-2">
             <h1 className="text-3xl font-bold text-foreground">Welcome</h1>
             <p className="text-muted-foreground">Sign up</p>
+            <div>
+              <Image
+                src="/pfm-logo.svg"
+                alt="Logo"
+                width={48}
+                height={48}
+                className="mx-auto"
+              />
+            </div>
           </div>
           <RegisterForm />
         </div>
       </div>
     </main>
-  )
+  );
 }
 
-export default RegisterPage
+export default RegisterPage;

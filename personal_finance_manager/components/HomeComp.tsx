@@ -17,6 +17,7 @@ import { Dashboard } from "./Dashboard";
 import TransactionList from "./TransactionList";
 import { BudgetInput } from "./BudgetInput";
 import LogOutComp from "./LogOutComp";
+import Image from "next/image";
 
 function HomeComp() {
   const { transactions, budgets, notifications } = useAppSelector(
@@ -82,11 +83,19 @@ function HomeComp() {
     <div className="min-h-screen bg-background">
       <header className="border-b border-border bg-card">
         <div className="flex items-center justify-between px-4 py-6">
-               {/* <div className="container mx-auto px-4 py-6"> */}
+          {/* <div className="container mx-auto px-4 py-6"> */}
 
           <div className="flex items-center gap-3">
             <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary cursor-pointer">
-              <Wallet className="h-6 w-6 text-primary-foreground" />
+              <div>
+                <Image
+                  src="/pfm-logo.svg"
+                  alt="Logo"
+                  width={48}
+                  height={48}
+                  className="mx-auto"
+                />
+              </div>
             </div>
             <div className="cursor-pointer">
               <h1 className="text-3xl font-bold tracking-tight text-foreground">
@@ -142,10 +151,18 @@ function HomeComp() {
 
         <Tabs defaultValue="dashboard" className="space-y-6">
           <TabsList className="grid w-full grid-cols-4 lg:w-auto lg:inline-grid">
-            <TabsTrigger value="dashboard" className="cursor-pointer">Dashboard</TabsTrigger>
-            <TabsTrigger value="transactions" className="cursor-pointer">Transactions</TabsTrigger>
-            <TabsTrigger value="add" className="cursor-pointer">Add Transaction</TabsTrigger>
-            <TabsTrigger value="budget" className="cursor-pointer">Budgets</TabsTrigger>
+            <TabsTrigger value="dashboard" className="cursor-pointer">
+              Dashboard
+            </TabsTrigger>
+            <TabsTrigger value="transactions" className="cursor-pointer">
+              Transactions
+            </TabsTrigger>
+            <TabsTrigger value="add" className="cursor-pointer">
+              Add Transaction
+            </TabsTrigger>
+            <TabsTrigger value="budget" className="cursor-pointer">
+              Budgets
+            </TabsTrigger>
           </TabsList>
 
           <TabsContent value="dashboard" className="space-y-6">
