@@ -5,12 +5,16 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { registerFtn } from "@/budget/budgetSlice";
-import { useAppDispatch } from "@/lib/hooks";
+import { useAppDispatch, useAppSelector } from "@/lib/hooks";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { toast } from "sonner";
 
 function RegisterForm() {
   const router = useRouter();
+  const { error: registerError, message } = useAppSelector(
+    (state) => state.budgetReducer
+  );
   const dispatch = useAppDispatch();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -53,9 +57,11 @@ function RegisterForm() {
 
     try {
       await dispatch(registerFtn({ email, password })).unwrap();
+      toast(message || "Registration successful");
 
       router.push("/sign-in");
     } catch (error) {
+      toast(registerError);
     } finally {
       setIsLoading(false);
     }

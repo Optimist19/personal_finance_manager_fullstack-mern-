@@ -6,7 +6,14 @@ export async function GET(request: NextRequest) {
     const data = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/budgets`, {
       headers: { cookie }
     });
+
     const result = await data.json();
+    if (!data.ok) {
+      return NextResponse.json(
+        { message: result.message || "Failed to fetch budgets" },
+        { status: result.status }
+      );
+    }
     return NextResponse.json(result, { status: data.status });
   } catch (error) {
     return NextResponse.json(

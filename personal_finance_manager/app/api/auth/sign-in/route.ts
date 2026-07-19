@@ -18,15 +18,23 @@ export async function POST(req: NextRequest) {
       },
       body: JSON.stringify({ email, password })
     });
+
+    if (res?.statusText === "Unauthorized") {
+      return NextResponse.json(
+        { message: "Invalid email or password" },
+        { status: 401 }
+      );
+    }
     const data = await res.json();
+
     const setCookie = res.headers.get("set-cookie");
     const headers: Record<string, string> = {};
     if (setCookie) headers["Set-Cookie"] = setCookie;
     return NextResponse.json(data, { status: res.status, headers });
   } catch (error) {
-    return NextResponse.json(
-      { message: "Internal Server Error" },
-      { status: 500 }
-    );
+    // console.log(error, "error")
+    // const message =
+    //   error instanceof Error ? error.message : "Something went wrong";
+    return NextResponse.json({ message: "An error occurred" }, { status: 500 });
   }
 }

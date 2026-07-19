@@ -5,9 +5,10 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { signInFtn } from "@/budget/budgetSlice";
-import { useAppDispatch } from "@/lib/hooks";
+import { useAppDispatch, useAppSelector } from "@/lib/hooks";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { toast } from "sonner";
 
 function SignInForm() {
   const router = useRouter();
@@ -18,6 +19,9 @@ function SignInForm() {
     {}
   );
   const [isLoading, setIsLoading] = useState(false);
+  const { error: signInError, success } = useAppSelector(
+    (state) => state.budgetReducer
+  );
 
   const validateForm = () => {
     const newErrors: { email?: string; password?: string } = {};
@@ -54,13 +58,15 @@ function SignInForm() {
     // Simulate API call
     try {
       await dispatch(signInFtn({ email, password })).unwrap();
-
+      toast(success || "Sign in successful");
       router.push("/");
     } catch (error) {
+      toast(signInError);
     } finally {
       setIsLoading(false);
     }
   };
+
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">

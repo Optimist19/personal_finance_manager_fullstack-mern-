@@ -18,15 +18,20 @@ export async function POST(req: NextRequest) {
       },
       body: JSON.stringify({ email, password })
     });
+
     const data = await res.json();
-    const setCookie = res.headers.get("set-cookie");
-    const headers: Record<string, string> = {};
-    if (setCookie) headers["Set-Cookie"] = setCookie;
-    return NextResponse.json(data, { status: res.status, headers });
+
+    if (!res.ok) {
+      return NextResponse.json(
+        { message: data.message || "Something went wrong" },
+        { status: res.status }
+      );
+    }
+
+    return NextResponse.json(data, { status: res.status });
   } catch (error) {
-    return NextResponse.json(
-      { message: "Internal Server Error" },
-      { status: 500 }
-    );
+    const message =
+      error instanceof Error ? error.message : "Something went wrong";
+    return NextResponse.json({ message }, { status: 500 });
   }
 }

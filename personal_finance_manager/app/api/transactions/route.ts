@@ -7,6 +7,12 @@ export async function GET(request: NextRequest) {
       headers: { cookie }
     });
     const result = await data.json();
+    if (!data.ok) {
+      return NextResponse.json(
+        { message: result.message || "Failed to fetch transactions" },
+        { status: result.status }
+      );
+    }
     return NextResponse.json(result, { status: data.status });
   } catch (error) {
     return NextResponse.json(

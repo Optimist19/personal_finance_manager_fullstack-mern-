@@ -25,7 +25,7 @@ const initialState: InitialStateType = {
   isLoading: false,
   error: "",
   success: "",
-  message: "",
+  message: ""
 };
 
 export const budgetSlice = createSlice({
@@ -171,11 +171,11 @@ export const budgetSlice = createSlice({
         state.isLoading = true;
       })
       .addCase(registerFtn.fulfilled, (state) => {
-        state.message = "Registration successful";
+        state.success = "Registration successful";
         state.isLoading = false;
       })
-      .addCase(registerFtn.rejected, (state) => {
-        state.error = "Failed to register";
+      .addCase(registerFtn.rejected, (state, action) => {
+        state.error = action.payload as string;
         state.isLoading = false;
       });
 
@@ -184,12 +184,12 @@ export const budgetSlice = createSlice({
       .addCase(signInFtn.pending, (state) => {
         state.isLoading = true;
       })
-      .addCase(signInFtn.fulfilled, (state, action) => {
+      .addCase(signInFtn.fulfilled, (state) => {
         state.success = "Sign in successful";
         state.isLoading = false;
       })
-      .addCase(signInFtn.rejected, (state) => {
-        state.error = "Failed to sign in";
+      .addCase(signInFtn.rejected, (state, action) => {
+        state.error = action.payload as string;
         state.isLoading = false;
       });
 
@@ -199,7 +199,7 @@ export const budgetSlice = createSlice({
         state.isLoading = true;
       })
       .addCase(logOutFTn.fulfilled, (state) => {
-        state.success = "Log out successful";
+        // state.success = "Log out successful";
         state.isLoading = false;
       })
       .addCase(logOutFTn.rejected, (state) => {
@@ -325,7 +325,7 @@ export const logOutFTn = createAsyncThunk("logOutFTn", async () => {
 
 export const registerFtn = createAsyncThunk(
   "registerFtn",
-  async (userData: UserDetailType) => {
+  async (userData: UserDetailType, {rejectWithValue}) => {
     const { email, password } = userData;
     try {
       const res = await fetch("/api/auth/register", {
@@ -335,18 +335,23 @@ export const registerFtn = createAsyncThunk(
         },
         body: JSON.stringify({ email, password })
       });
+
+      if (!res.ok) {
+        throw new Error("Registration failed");
+      }
       const data = await res.json();
       return data;
     } catch (error) {
-      const err = "Internal Server Error";
-      return err;
+      const message =
+        error instanceof Error ? error.message : "An unknown error occurred";
+      return rejectWithValue(message);
     }
   }
 );
 
 export const signInFtn = createAsyncThunk(
   "signInFtn",
-  async (userData: UserDetailType) => {
+  async (userData: UserDetailType, { rejectWithValue }) => {
     const { email, password } = userData;
     try {
       const res = await fetch("/api/auth/sign-in", {
@@ -356,11 +361,22 @@ export const signInFtn = createAsyncThunk(
         },
         body: JSON.stringify({ email, password })
       });
+
+
+      if (res.status === 401) {
+        throw new Error("You are not authorized, please register first");
+      }
+
+      if (!res.ok) {
+        return rejectWithValue("Something went wrongg");
+      }
+
       const data = await res.json();
       return data;
     } catch (error) {
-      const err = "Internal Server Error";
-      return err;
+      const message =
+        error instanceof Error ? error.message : "An unknown error occurred";
+      return rejectWithValue(message);
     }
   }
 );
