@@ -6,13 +6,14 @@ const Budgets = require("../models/budgets");
 const { hashPasswordFtn } = require("../utils/hashPassword");
 const passport = require("passport");
 
-
-
 //This is the sign in end-point
-router.post("/signin", passport.authenticate("local"),  (req, res) => {
-  res.status(200).json({message: "Signed in successfully"});
+router.post("/signin", passport.authenticate("local"), (req, res) => {
+  try {
+    res.status(200).json({ message: "Signed in successfully" });
+  } catch (error) {
+    res.status(500).json({ message: "Internal Server Error" });
+  }
 });
-
 
 //This is the register end-point
 router.post("/register", async (req, res) => {
@@ -20,49 +21,52 @@ router.post("/register", async (req, res) => {
   const hashedPassword = await hashPasswordFtn(password);
 
   if (!email || !password) {
-    return res.status(400).json({ error: "Email and password required" });
+    return res.status(400).json({ message: "Email and password required" });
   }
+  try {
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      return res
+        .status(409)
+        .json({ message: "User already exists, please go to  sign in" });
+    }
 
-  const existingUser = await User.findOne({ email });
-  if (existingUser) {
-    return res
-      .status(409)
-      .json({ error: "User already exists, please click on sign-in" });
+    const user = await User.create({ email, password: hashedPassword });
+    // req.session.user = user._id;
+    res.status(201).json(user);
+  } catch (error) {
+    res.status(500).json({ message: "Internal Server Error" });
   }
-
-  const user = await User.create({ email, password: hashedPassword });
-  // req.session.user = user._id;
-  res.status(201).json(user);
 });
-
 
 //This is the log out end-point
 router.post("/logout", (req, res) => {
-  req.session.destroy((err) => {
-    if (err) {
-      return res.status(500).json({ message: "Logout failed" });
-    }
+  try {
+    req.session.destroy((err) => {
+      if (err) {
+        return res.status(500).json({ message: "Logout failed" });
+      }
 
-    res.clearCookie("connect.sid");
-    res.status(200).json({ message: "Logged out successfully" });
-  });
+      res.clearCookie("connect.sid");
+      res.status(200).json({ message: "Logged out successfully" });
+    });
+  } catch (error) {
+    res.status(500).json({ message: "Internal Server Error" });
+  }
 });
-
 
 //This is the end-point to get a user tranasctions. NB All user's tranasctions and not an end point to get all tranasactions
 router.get("/transactions", async (req, res) => {
+  if (!req.user || !req.user) {
+    return res.status(401).json({ error: "Unauthorized" });
+  }
   try {
-    if (!req.user || !req.user) {
-      return res.status(401).json({ error: "Unauthorized" });
-    }
-
     const data = await Transactions.find({ userId: req.user._id });
     res.status(200).json(data || []);
   } catch (err) {
     res.status(500).json({ error: "Internal Server Error" });
   }
 });
-
 
 //This is the end-point for a user to make a tranasction.
 router.post("/transactions", async (req, res) => {
@@ -88,7 +92,6 @@ router.post("/transactions", async (req, res) => {
     res.status(500).json({ error: "Internal Server Error" });
   }
 });
-
 
 //This is the end-point to edit a user's tranasction.
 router.put("/transactions/:id", async (req, res) => {
@@ -120,7 +123,6 @@ router.put("/transactions/:id", async (req, res) => {
   }
 });
 
-
 //This is the end-point to get a user's tranasction.
 router.delete("/transactions/:id", async (req, res) => {
   if (!req.user || !req.user) {
@@ -143,11 +145,8 @@ router.delete("/transactions/:id", async (req, res) => {
   }
 });
 
-
-
-//This is the end-point to get a user budget. 
+//This is the end-point to get a user budget.
 router.get("/budgets", async (req, res) => {
-
   try {
     if (!req.user || !req.user) {
       return res.status(401).json({ error: "Unauthorized" });
@@ -159,8 +158,6 @@ router.get("/budgets", async (req, res) => {
     res.status(500).json({ error: "Internal Server Error" });
   }
 });
-
-
 
 //This is the end-point for a user to make a budget.
 router.post("/budgets", async (req, res) => {

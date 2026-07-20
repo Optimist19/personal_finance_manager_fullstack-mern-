@@ -29,7 +29,6 @@ module.exports = function () {
       async (email, password, done) => {
         try {
           const existingUser = await User.findOne({ email });
-
           if (!existingUser) {
             return done(null, false, { message: "No user found" });
           }

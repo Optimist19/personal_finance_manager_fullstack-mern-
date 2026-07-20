@@ -1,5 +1,8 @@
 require("dotenv").config();
 const MongoStore = require("connect-mongo").default;
+const  dns = require("node:dns");
+
+
 
 const session = require("express-session");
 const express = require("express");
@@ -18,6 +21,7 @@ const PORT = process.env.PORT || 5000;
 app.use(express.json());
 
 initializePassport();
+dns.setServers(["8.8.8.8", "1.1.1.1"]);
 mongoose
   .connect(process.env.MONGO_URI)
   .then(() => console.log("Connected to Database!!"))
